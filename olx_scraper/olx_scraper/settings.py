@@ -1,3 +1,5 @@
+from shutil import which
+
 # Scrapy settings for olx_scraper project
 #
 # For simplicity, this file contains only settings considered important or
@@ -12,12 +14,26 @@ BOT_NAME = "olx_scraper"
 SPIDER_MODULES = ["olx_scraper.spiders"]
 NEWSPIDER_MODULE = "olx_scraper.spiders"
 
+DOWNLOAD_DELAY = 1
+
+SCRAPEOPS_API_KEY = 'af1fb38b-7667-44ef-bee6-3fed8ffc67a1'
+SCRAPEOPS_FAKE_BROWSER_HEADER_ENDPOINT = 'https://headers.scrapeops.io/v1/browser-headers'
+SCRAPEOPS_FAKE_BROWSER_HEADER_ENABLED = True
+SCRAPEOPS_NUM_RESULTS = 50
+
+SELENIUM_DRIVER_NAME = 'chrome'
+SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
+SELENIUM_DRIVER_ARGUMENTS = ['--headless']
+
+FEEDS = {
+    'apps_data.json'    :   {'format':'json'}
+}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "olx_scraper (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -44,15 +60,17 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    "olx_scraper.middlewares.OlxScraperSpiderMiddleware": 543,
-#}
+# SPIDER_MIDDLEWARES = {
+#    "olx_scraper.middlewares.OlxScraperSpiderMiddleware": None,
+# }
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
+DOWNLOADER_MIDDLEWARES = {
 #    "olx_scraper.middlewares.OlxScraperDownloaderMiddleware": 543,
-#}
+    'scrapy_selenium.SeleniumMiddleware': 800,
+    "olx_scraper.middlewares.OlxScraperFakeBrowserHeaders": 404,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -62,9 +80,9 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "olx_scraper.pipelines.OlxScraperPipeline": 300,
-#}
+ITEM_PIPELINES = {
+   "olx_scraper.pipelines.OlxScraperPipeline": 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
