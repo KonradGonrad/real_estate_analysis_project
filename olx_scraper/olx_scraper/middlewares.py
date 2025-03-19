@@ -149,3 +149,45 @@ class OlxScraperFakeBrowserHeaders:
         request.headers['accept'] = random_browser_header['accept'] 
         request.headers['user-agent'] = random_browser_header['user-agent'] 
         request.headers['upgrade-insecure-requests'] = random_browser_header.get('upgrade-insecure-requests')
+
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from scrapy.http import HtmlResponse
+from scrapy_selenium import SeleniumMiddleware
+import time
+
+class SeleniumMiddleware:
+
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        settings = crawler.settings
+        driver_executable_path = settings.get('SELENIUM_DRIVER_EXECUTABLE_PATH')
+        driver_arguments = settings.get('SELENIUM_DRIVER_ARGUMENTS', ['--headless', '--no-sandbox', '--disable-dev-shm-usage'])
+        return cls(driver_executable_path, driver_arguments)
+
+    def __init__(self, driver_executable_path, driver_arguments):
+        # Set up Chrome options
+        chrome_options = Options()
+        for arg in driver_arguments:
+            chrome_options.add_argument(arg)
+
+        # Initialize WebDriver with Service
+        service = Service(driver_executable_path)
+        self.driver = webdriver.Chrome(service=service, options=chrome_options)
+
+    def process_request(self, request, spider):
+        """ Handles requests that require Selenium. """
+        if request.meta.get("use_selenium", False):  # Only use if meta["use_selenium"] = True
+            self.driver.get(request.url)
+            time.sleep(2)  # Wait for the page to load
+            return HtmlResponse(
+                url=request.url,
+                body=self.driver.page_source,
+                encoding="utf-8",
+                request=request
+            )
+
+    def __del__(self):
+        """ Ensure that the driver is quit when the spider finishes. """
+        self.driver.quit()

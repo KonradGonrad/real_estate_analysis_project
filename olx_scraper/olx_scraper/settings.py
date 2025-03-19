@@ -22,12 +22,14 @@ SCRAPEOPS_FAKE_BROWSER_HEADER_ENABLED = True
 SCRAPEOPS_NUM_RESULTS = 50
 
 SELENIUM_DRIVER_NAME = 'chrome'
-SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
+SELENIUM_DRIVER_EXECUTABLE_PATH = "/opt/homebrew/bin/chromedriver" 
 SELENIUM_DRIVER_ARGUMENTS = ['--headless']
+SELENIUM_BROWSER_EXECUTABLE_PATH = '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version'
 
 FEEDS = {
     'apps_data.json'    :   {'format':'json'}
 }
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "olx_scraper (+http://www.yourdomain.com)"
@@ -67,8 +69,7 @@ ROBOTSTXT_OBEY = False
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-#    "olx_scraper.middlewares.OlxScraperDownloaderMiddleware": 543,
-    'scrapy_selenium.SeleniumMiddleware': 800,
+    'olx_scraper.middlewares.SeleniumMiddleware': 200,
     "olx_scraper.middlewares.OlxScraperFakeBrowserHeaders": 404,
 }
 
@@ -81,7 +82,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   "olx_scraper.pipelines.OlxScraperPipeline": 300,
+   "olx_scraper.pipelines.OlxScraperPipeline": 600,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
