@@ -8,7 +8,9 @@ import scrapy
 
 class ApartmentItems(scrapy.Item):
     # define the fields for your item here like:
+    div_count = scrapy.Field()
     link = scrapy.Field()
+
     title = scrapy.Field()
     location = scrapy.Field()
     price = scrapy.Field()
