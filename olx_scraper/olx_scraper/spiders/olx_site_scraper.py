@@ -59,7 +59,7 @@ class OlxSiteScraperSpider(scrapy.Spider):
 
 
         apartments = response.css('div[data-cy="search.listing.organic"] > span + ul > li')
-        for apartment in apartments:
+        for apartment in apartments[:5]:
             relative_url = apartment.css('div + div > a::attr(href)').get()
             if relative_url:
                 apartment_url = "https://www.otodom.pl/" + relative_url
@@ -70,15 +70,17 @@ class OlxSiteScraperSpider(scrapy.Spider):
                     meta={'apartment_url': apartment_url}
                 )
 
-        if next_page is not None:
-             yield SeleniumRequest(
-                  url = next_page_url,
-                  callback = self.parse,
-                  wait_time=2,
-                  meta={'driver': driver, 'page_index': page_index}
-             )
+        # if next_page is not None:
+        #      yield SeleniumRequest(
+        #           url = next_page_url,
+        #           callback = self.parse,
+        #           wait_time=2,
+        #           meta={'driver': driver, 'page_index': page_index}
+        #      )
         
 
+    def check_information(self, name):
+         items_names = ['link', 'title', 'location', 'price', 'price_per_m2', 'meters', 'rooms', 'heating', 'floor', 'rent', 'finish_level', 'market_type', 'form_of_ownership', 'type_of_advertiser', 'additional_info', 'type_of_building', 'building_material', 'windows', 'energy_certificate', 'equipment']
             
 
     def parse_apartment_site(self, response):
@@ -88,13 +90,12 @@ class OlxSiteScraperSpider(scrapy.Spider):
         # Different divs placement on sub_sites
         div_count, idx = len(response.xpath("//main/div")), 2
         if div_count != 3:
-             idx = div_count - 1
-             
-
+            idx = div_count - 1
 
         # Items assigment:       
-        apartmentItems['div_count']             = div_count
-        apartmentItems['link']                  = app_link      
+        # apartmentItems['div_count']             = div_count
+        apartmentItems['link']                  = app_link    
+
         apartmentItems['title']                 = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(1) > h1::text").get()
         apartmentItems['location']              = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > a::text").get()
         apartmentItems['price']                 = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) strong::text").get()
@@ -112,12 +113,21 @@ class OlxSiteScraperSpider(scrapy.Spider):
         apartmentItems['additional_info']       = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(17) > p:nth-of-type(2) span::text").getall()
 
         # Elevator error, cos its getting also year of building -> to repair
-        apartmentItems['elevator']              = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div:nth-of-type(1) > p:nth-of-type(2)::text").get()
-        apartmentItems['type_of_building']      = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div:nth-of-type(3) > p:nth-of-type(2)::text").get()
-        apartmentItems['building_material']     = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div:nth-of-type(5) > p:nth-of-type(2)::text").get()
-        apartmentItems['windows']               = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div:nth-of-type(7) > p:nth-of-type(2)::text").get()
-        apartmentItems['energy_certificate']    = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div:nth-of-type(9) > p:nth-of-type(2)::text").get()
+        # num_building_and_materials              = len(response.css('main > div:nth-of-type(4) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div'))
 
-        apartmentItems['equipment']             = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(2) > div  p:nth-of-type(2)::text").get()
+        # identificators = ['Rok budowy', 'Winda', 'Bezpieczeństwo']
+        # items_id = ['year_of_building', 'elevator', 'safety']
+        # for id in identificators: 
+        #     for x in range(1, num_building_and_materials + 1, 2):
+        #         if response.css('main > div:nth-of-type(4) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div:nth-of-type({x}) > p:nth-of-type(1)::text').get() == id:
+        #             apartmentItems[items_id[identificators.index(id)]]              = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div:nth-of-type({x}) > p:nth-of-type(2)::text").get()
+
+        # apartmentItems['type_of_building']      = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div:nth-of-type(3) > p:nth-of-type(2)::text").get()
+        # apartmentItems['building_material']     = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div:nth-of-type(5) > p:nth-of-type(2)::text").get()
+        # apartmentItems['windows']               = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div:nth-of-type(7) > p:nth-of-type(2)::text").get()
+        # apartmentItems['energy_certificate']    = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div:nth-of-type(9) > p:nth-of-type(2)::text").get()
+
+        # apartmentItems['equipment']             = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(2) > div  p:nth-of-type(2)::text").get()
 
         yield apartmentItems
+

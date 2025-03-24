@@ -8,7 +8,7 @@ import scrapy
 
 class ApartmentItems(scrapy.Item):
     # define the fields for your item here like:
-    div_count = scrapy.Field()
+    # div_count = scrapy.Field()
     link = scrapy.Field()
 
     title = scrapy.Field()
@@ -17,6 +17,7 @@ class ApartmentItems(scrapy.Item):
     price_per_m2 = scrapy.Field()
     meters = scrapy.Field()
     rooms = scrapy.Field()
+    
     heating = scrapy.Field()
     floor = scrapy.Field()
     rent = scrapy.Field()
@@ -25,9 +26,14 @@ class ApartmentItems(scrapy.Item):
     form_of_ownership = scrapy.Field()
     type_of_advertiser = scrapy.Field()
     additional_info = scrapy.Field()
-    elevator = scrapy.Field()
-    type_of_building = scrapy.Field()
-    building_material = scrapy.Field()
-    windows = scrapy.Field()
-    energy_certificate = scrapy.Field()
-    equipment = scrapy.Field()
+
+    #Building_and_materials
+    # year_of_building = scrapy.Field()
+    # elevator = scrapy.Field()
+    # safety = scrapy.Field()
+
+    # type_of_building = scrapy.Field()
+    # building_material = scrapy.Field()
+    # windows = scrapy.Field()
+    # energy_certificate = scrapy.Field()
+    # equipment = scrapy.Field()
