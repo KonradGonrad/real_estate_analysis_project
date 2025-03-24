@@ -34,7 +34,7 @@ class OlxScraperPipeline:
         adapter['rent'] = rent_value
 
         location = adapter.get('location')
-        street, city, state = self.split_location(location)
+        street, city, state = self.parse_location(location)
         adapter['street'] = street
         adapter['city'] = city
         adapter['state'] = state
@@ -61,7 +61,8 @@ class OlxScraperPipeline:
                 x = x.replace(replace_value, "")
         if x.replace(".", '').isdigit():
             return float(x)
-        return x
+        else:
+            return None
     
     @staticmethod
     def replace_elevator(x: str):
@@ -70,14 +71,25 @@ class OlxScraperPipeline:
         return x
     
     @staticmethod
-    def split_location(location: str):
-        if not isinstance(location, str):
-            return None, None, None
+    def parse_location(location: str):
+        splitted_locations = location.split(",")
+        splitted_locations = [item.strip() for item in splitted_locations]
         
-        parts = [p.strip() for p in location.split(",")]
-        street = parts[0] if len(parts) > 0 else None
-        city = parts[-2] if len(parts) > 1 else None
-        state = parts[-1] if len(parts) > 2 else None
+        # Street
+        if 'ul' in splitted_locations[0] or splitted_locations[0].endswith('a') or splitted_locations[0].endswith('skiej'):
+            street = splitted_locations[0]
+        else:
+            street = None
+        
+        # city
+        if splitted_locations[-2].endswith('ki'):
+            city = splitted_locations[0 if street == None else 1]
+        else:
+            city = splitted_locations[-2]
+
+        # state
+        state = splitted_locations[-1]
+
         return street, city, state
     
     @staticmethod
@@ -91,4 +103,5 @@ class OlxScraperPipeline:
         floor_max = float(floor_split[1]) if len(floor_split) > 1 else float(floor)
 
         return floor, floor_max
+
 
