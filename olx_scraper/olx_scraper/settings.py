@@ -1,4 +1,5 @@
 from shutil import which
+from olx_scraper.api_keys import MYSCRAPEOPS_API_KEY
 
 # Scrapy settings for olx_scraper project
 #
@@ -16,7 +17,7 @@ NEWSPIDER_MODULE = "olx_scraper.spiders"
 
 DOWNLOAD_DELAY = 1
 
-SCRAPEOPS_API_KEY = 'af1fb38b-7667-44ef-bee6-3fed8ffc67a1'
+SCRAPEOPS_API_KEY = MYSCRAPEOPS_API_KEY
 SCRAPEOPS_FAKE_BROWSER_HEADER_ENDPOINT = 'https://headers.scrapeops.io/v1/browser-headers'
 SCRAPEOPS_FAKE_BROWSER_HEADER_ENABLED = True
 SCRAPEOPS_NUM_RESULTS = 50

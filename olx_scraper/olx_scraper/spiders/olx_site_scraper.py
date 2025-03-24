@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 
+
 class OlxSiteScraperSpider(scrapy.Spider):
     name = "olx_site_scraper"
     allowed_domains = ["www.otodom.pl"]
