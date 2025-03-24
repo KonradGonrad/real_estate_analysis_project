@@ -59,7 +59,7 @@ class OlxSiteScraperSpider(scrapy.Spider):
 
 
         apartments = response.css('div[data-cy="search.listing.organic"] > span + ul > li')
-        for apartment in apartments[:5]:
+        for apartment in apartments:
             relative_url = apartment.css('div + div > a::attr(href)').get()
             if relative_url:
                 apartment_url = "https://www.otodom.pl/" + relative_url
@@ -70,13 +70,13 @@ class OlxSiteScraperSpider(scrapy.Spider):
                     meta={'apartment_url': apartment_url}
                 )
 
-        # if next_page is not None:
-        #      yield SeleniumRequest(
-        #           url = next_page_url,
-        #           callback = self.parse,
-        #           wait_time=2,
-        #           meta={'driver': driver, 'page_index': page_index}
-        #      )
+        if next_page is not None:
+             yield SeleniumRequest(
+                  url = next_page_url,
+                  callback = self.parse,
+                  wait_time=2,
+                  meta={'driver': driver, 'page_index': page_index}
+             )
         
 
     def check_information(self, name):

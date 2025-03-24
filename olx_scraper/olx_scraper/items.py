@@ -12,12 +12,18 @@ class ApartmentItems(scrapy.Item):
     link = scrapy.Field()
 
     title = scrapy.Field()
+
     location = scrapy.Field()
+    #From location:
+    street = scrapy.Field()
+    city = scrapy.Field()
+    state = scrapy.Field()
+
     price = scrapy.Field()
     price_per_m2 = scrapy.Field()
     meters = scrapy.Field()
     rooms = scrapy.Field()
-    
+
     heating = scrapy.Field()
     floor = scrapy.Field()
     rent = scrapy.Field()
@@ -37,3 +43,5 @@ class ApartmentItems(scrapy.Item):
     # windows = scrapy.Field()
     # energy_certificate = scrapy.Field()
     # equipment = scrapy.Field()
+
+
