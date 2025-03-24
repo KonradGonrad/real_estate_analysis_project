@@ -44,6 +44,10 @@ class OlxScraperPipeline:
         adapter['floor'] = floor
         adapter['total_floors'] = floor_max
 
+        heating = adapter.get('heating')
+        heating = self.parse_heating(heating=heating)
+        adapter['heating'] = heating
+
         # elevator_value = adapter.get('elevator')
         # elevator_value = self.replace_elevator(elevator_value)
         # adapter['elevator'] = elevator_value
@@ -103,5 +107,30 @@ class OlxScraperPipeline:
         floor_max = float(floor_split[1]) if len(floor_split) > 1 else float(floor)
 
         return floor, floor_max
+    
+    @staticmethod
+    def parse_heating(heating: str):
+        """
+        Added this function to change strings into binary notation, for better performance of model.
+        0 = brak
+        1 = miejskie
+        2 = gazowe
+        3 = inne
+        4 = kotłownia
+        5 = elektryczne
+        """
+        match heating:
+            case 'brak informacji':
+                return 0
+            case 'miejskie':
+                return 1
+            case 'gazowe':
+                return 2
+            case 'inne':
+                return 3
+            case 'kotłownia':
+                return 4
+            case 'elektryczne':
+                return 5
 
 
