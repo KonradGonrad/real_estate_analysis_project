@@ -26,6 +26,7 @@ class ApartmentItems(scrapy.Item):
 
     heating = scrapy.Field()
     floor = scrapy.Field()
+    total_floors = scrapy.Field()
     rent = scrapy.Field()
     finish_level = scrapy.Field()
     market_type = scrapy.Field()

@@ -39,6 +39,11 @@ class OlxScraperPipeline:
         adapter['city'] = city
         adapter['state'] = state
 
+        floor = adapter.get('floor')
+        floor, floor_max = self.parse_floor(floor=floor)
+        adapter['floor'] = floor
+        adapter['total_floors'] = floor_max
+
         # elevator_value = adapter.get('elevator')
         # elevator_value = self.replace_elevator(elevator_value)
         # adapter['elevator'] = elevator_value
@@ -50,7 +55,7 @@ class OlxScraperPipeline:
         if not isinstance(x, str):
             return x
 
-        replace_values = ['zł/m²', 'zł', 'm²', " ", 'pokój', 'pokoje'] 
+        replace_values = ['zł/m²', 'zł', 'm²', " ", 'pokój', 'pokoje', 'pokoi'] 
         for replace_value in replace_values:
             if replace_value in x:
                 x = x.replace(replace_value, "")
@@ -74,4 +79,16 @@ class OlxScraperPipeline:
         city = parts[-2] if len(parts) > 1 else None
         state = parts[-1] if len(parts) > 2 else None
         return street, city, state
+    
+    @staticmethod
+    def parse_floor(floor: str):
+        if floor == 'brak informacji':
+            return None, None
+        floor_split = floor.replace(">", "").replace(" ", "").split("/")
+        if floor_split[0] == 'parter':
+            floor_split[0] = 1
+        floor = float(floor_split[0])
+        floor_max = float(floor_split[1]) if len(floor_split) > 1 else float(floor)
+
+        return floor, floor_max
 
