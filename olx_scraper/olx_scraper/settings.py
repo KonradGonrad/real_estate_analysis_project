@@ -32,6 +32,24 @@ FEEDS = {
     'apps_data.json'    :   {'format':'json'}
 }
 
+# Settings about results
+
+SCRAP_PRICE = False
+SCRAP_BUILDING_INFO = True
+SCRAP_LOCATION = True
+SCRAP_ADD_INFO = True
+SCRAP_EQUIPMENT = True
+SCRAP_SELL_INFO = True
+SCRAP_OTHER = True
+
+SCRAP_SETTINGS = {"SCRAP_PRICE": SCRAP_PRICE,
+                  "SCRAP_BUILDING_INFO": SCRAP_BUILDING_INFO,
+                  "SCRAP_LOCATION": SCRAP_LOCATION,
+                  "SCRAP_ADD_INFO": SCRAP_ADD_INFO,
+                  "SCRAP_EQUIPMENT": SCRAP_EQUIPMENT,
+                  "SCRAP_SELL_INFO": SCRAP_SELL_INFO,
+                  "SCRAP_OTHER": SCRAP_OTHER}
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "olx_scraper (+http://www.yourdomain.com)"

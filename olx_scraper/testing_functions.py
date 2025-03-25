@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 loc_1 = "ul. Natalińska, Otrębusy, Brwinów, pruszkowski, mazowieckie"
 loc_2 =  "Heleny Żybutowskiej, Stargard, stargardzki, zachodniopomorskie"
@@ -47,7 +47,7 @@ add_3 = ["ogródek", " taras", " garaż/miejsce parkingowe"]
 add_4 = ["garaż/miejsce parkingowe", " oddzielna kuchnia"]
 add_5 = [None]
 
-def parse_additional_info(additional_info: List) -> int:
+def parse_additional_info(additional_info: List) -> Dict:
     """
     returns informations from additional info scraped in order:
     balcony, garage, utility_room, basement, separete_kitchen, garden, patio, 
@@ -61,7 +61,13 @@ def parse_additional_info(additional_info: List) -> int:
     garden = 1 if "ogródek" in additional_info else 0
     patio = 1 if "taras" in additional_info else  0
 
-    return balcony, garage, utility_room, basement, separate_kitchen, garden, patio
+    return {"balcony": balcony,
+            "garage": garage, 
+            "utility_room": utility_room, 
+            "basement":basement, 
+            "separate_kitchen" : separate_kitchen, 
+            "garden": garden, 
+            "patio": patio}
 
 balcony, garage, utility_room, basement, separate_kitchen, garden, patio = parse_additional_info(add_5)
 
@@ -84,7 +90,7 @@ eq_8 = ["system alarmowy"]
 eq_9 = [""]
 eq_10 = [None]
 
-def parse_equipment(equipment: List) -> int:
+def parse_equipment(equipment: List) -> Dict:
     """
     returns int 1 or 0 depends on scraped equipment in order:
     anti-burglary doors and windows, anti-burglary blinds, furniture, air_conditioning, internet, entryphone, stove, alarm system
@@ -99,7 +105,14 @@ def parse_equipment(equipment: List) -> int:
     stove = 1 if "kuchenka" in equipment else 0
     alarm_system = 1 if "system alarmowy" in equipment else 0
 
-    return anti_burglary_doors_windows, anti_burglary_blinds, furniture, air_conditioning, internet, entryphone, stove, alarm_system
+    return {"anti_burglary_doors_windows": anti_burglary_doors_windows,
+            "anti_burglary_blinds": anti_burglary_blinds,
+            "furniture": furniture,
+            "air_conditioning": air_conditioning,
+            "internet": internet,
+            "entryphone": entryphone,
+            "stove": stove,
+            "alarm_system": alarm_system}
 
 anti_burglary_doors_windows, anti_burglary_blinds, furniture, air_conditioning, internet, entryphone, stove, alarm_system = parse_equipment(eq_10)
 
@@ -111,3 +124,23 @@ print(f"""anti_burglary_doors_windows: {anti_burglary_doors_windows},
         \nentryphone: {entryphone},
         \nstove: {stove}
         \nalarm_system: {alarm_system}""")
+
+
+SCRAP_PRICE = True
+SCRAP_BUILDING_INFO = True
+SCRAP_LOCATION = True
+SCRAP_ADD_INFO = True
+SCRAP_EQUIPMENT = True
+SCRAP_SELL_INFO = True
+SCRAP_OTHER = True
+
+SCRAP_SETTINGS = {"SCRAP_PRICE": SCRAP_PRICE,
+                  "SCRAP_BUILDING_INFO": SCRAP_BUILDING_INFO,
+                  "SCRAP_LOCATION": SCRAP_LOCATION,
+                  "SCRAP_ADD_INFO": SCRAP_ADD_INFO,
+                  "SCRAP_EQUIPMENT": SCRAP_EQUIPMENT,
+                  "SCRAP_SELL_INFO": SCRAP_SELL_INFO,
+                  "SCRAP_OTHER": SCRAP_OTHER}
+
+
+print(SCRAP_SETTINGS["SCRAP_PRICE"])

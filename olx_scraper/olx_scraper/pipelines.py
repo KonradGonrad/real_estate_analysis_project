@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 # Define your item pipelines here
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
@@ -8,6 +8,7 @@ from typing import List
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 from .items import Result
+from .settings import SCRAP_SETTINGS
 
 
 class OlxScraperPipeline:
@@ -17,13 +18,19 @@ class OlxScraperPipeline:
 
         result['link'] = adapter.get('link')
 
-        price_value = adapter.get('price')
-        price_value = self.replace_value(price_value)
-        result['price'] = price_value
+        # price
+        if SCRAP_SETTINGS['SCRAP_PRICE']:
+            price_value = adapter.get('price')
+            price_value = self.replace_value(price_value)
+            result['price'] = price_value
 
-        price_per_m_value = adapter.get('price_per_m2')
-        price_per_m_value = self.replace_value(price_per_m_value)
-        result['price_per_m2'] = price_per_m_value
+            price_per_m_value = adapter.get('price_per_m2')
+            price_per_m_value = self.replace_value(price_per_m_value)
+            result['price_per_m2'] = price_per_m_value
+
+            rent_value = adapter.get('rent')
+            rent_value = self.replace_value(rent_value)
+            result['rent'] = rent_value
 
         meters_value = adapter.get('meters')
         meters_value = self.replace_value(meters_value)
@@ -33,9 +40,7 @@ class OlxScraperPipeline:
         rooms_value = self.replace_value(rooms_value)
         result['rooms'] = rooms_value
 
-        rent_value = adapter.get('rent')
-        rent_value = self.replace_value(rent_value)
-        result['rent'] = rent_value
+
 
         location = adapter.get('location')
         street, city, state = self.parse_location(location)
@@ -61,8 +66,13 @@ class OlxScraperPipeline:
         # elevator_value = self.replace_elevator(elevator_value)
         # adapter['elevator'] = elevator_value
 
+        additional_info = adapter.get('additional_info')
+        result.update(self.parse_additional_info(additional_info))
+
         equipment = adapter.get('equipment')
-        result['anti_burglary_doors_windows'], result['anti_burglary_blinds'], result['furniture'], result['air_conditioning'], result['internet'], result['entryphone'], result['stove'], result['alarm_system'] = self.parse_equipment(equipment)
+        # result['anti_burglary_doors_windows'], result['anti_burglary_blinds'], result['furniture'], result['air_conditioning'], result['internet'], result['entryphone'], result['stove'], result['alarm_system'] = self.parse_equipment(equipment)
+        result.update(self.parse_equipment(equipment))
+
 
 
         return result
@@ -198,12 +208,12 @@ class OlxScraperPipeline:
                 return 3
             
     @staticmethod
-    def parse_additional_info(additional_info: List) -> int:
+    def parse_additional_info(additional_info: List) -> Dict:
         """
         returns informations from additional info scraped in order:
         balcony, garage, utility_room, basement, separete_kitchen, garden, patio, 
         """
-        additional_info = [info.strip() for info in additional_info]
+        additional_info = [info.strip() for info in additional_info if isinstance(info, str)]
         balcony = 1 if "balkon" in additional_info else 0
         garage = 1 if "garaż/miejsce parkingowe" in additional_info else 0
         utility_room = 1 if "pom. użytkowe" in additional_info else 0
@@ -212,16 +222,22 @@ class OlxScraperPipeline:
         garden = 1 if "ogródek" in additional_info else 0
         patio = 1 if "taras" in additional_info else  0
 
-        return balcony, garage, utility_room, basement, separate_kitchen, garden, patio
+        return {"balcony": balcony,
+                "garage": garage, 
+                "utility_room": utility_room, 
+                "basement":basement, 
+                "separate_kitchen" : separate_kitchen, 
+                "garden": garden, 
+                "patio": patio}
     
     @staticmethod
-    def parse_equipment(equipment: List) -> int:
+    def parse_equipment(equipment: List) -> Dict:
         """
         returns int 1 or 0 depends on scraped equipment in order:
         anti-burglary doors and windows, anti-burglary blinds, furniture, air_conditioning, internet, entryphone, stove, alarm system
         """
-        equipment = [eq.strip() for eq in equipment]
-        anti_burglary_doors_winodws = 1 if "drzwi / okna antywłamaniowe" in equipment else 0 
+        equipment = [eq.strip() for eq in equipment if isinstance(eq, str)]
+        anti_burglary_doors_windows = 1 if "drzwi / okna antywłamaniowe" in equipment else 0 
         furniture = 1 if "meble" in equipment else 0 
         air_conditioning = 1 if "klimatyzacja" in equipment else 0 
         internet = 1 if "internet" in equipment else 0 
@@ -230,4 +246,11 @@ class OlxScraperPipeline:
         stove = 1 if "kuchenka" in equipment else 0
         alarm_system = 1 if "system alarmowy" in equipment else 0
 
-        return anti_burglary_doors_winodws, anti_burglary_blinds, furniture, air_conditioning, internet, entryphone, stove, alarm_system
+        return {"anti_burglary_doors_windows": anti_burglary_doors_windows,
+                "anti_burglary_blinds": anti_burglary_blinds,
+                "furniture": furniture,
+                "air_conditioning": air_conditioning,
+                "internet": internet,
+                "entryphone": entryphone,
+                "stove": stove,
+                "alarm_system": alarm_system}
