@@ -1,5 +1,6 @@
 from shutil import which
-from olx_scraper.api_keys import MYSCRAPEOPS_API_KEY
+from olx_scraper.api_keys import MYSCRAPEOPS_API_KEY 
+# from olx_scraper.api_keys_example import MYSCRAPEOPS_API_KEY 
 
 # Scrapy settings for olx_scraper project
 #

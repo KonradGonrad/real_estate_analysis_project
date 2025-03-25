@@ -46,3 +46,35 @@ class ApartmentItems(scrapy.Item):
     # equipment = scrapy.Field()
 
 
+class Result(scrapy.Item):
+    # price
+    link = scrapy.Field() 
+    price = scrapy.Field()
+    price_per_m2 = scrapy.Field()
+    rent = scrapy.Field()
+
+    #building info
+    meters = scrapy.Field()
+    rooms = scrapy.Field()
+    heating = scrapy.Field()
+    floor = scrapy.Field()
+    max_floor = scrapy.Field()
+    finish_level = scrapy.Field()
+
+    #location
+    street = scrapy.Field()
+    city = scrapy.Field()
+    state = scrapy.Field()
+
+    #additional info
+    balcony = scrapy.Field()
+    garage = scrapy.Field()
+    utility_room = scrapy.Field()
+    basement = scrapy.Field()
+    separate_kitchen = scrapy.Field()
+    patio = scrapy.Field()
+    garden = scrapy.Field()
+
+    #sell info
+    type_of_advertiser = scrapy.Field()
+    market_type = scrapy.Field()

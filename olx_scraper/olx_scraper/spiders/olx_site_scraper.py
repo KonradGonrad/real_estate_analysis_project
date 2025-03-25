@@ -109,7 +109,6 @@ class OlxSiteScraperSpider(scrapy.Spider):
         apartmentItems['rent']                  = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(5) > p:nth-of-type(2)::text").get()
         apartmentItems['finish_level']          = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(7) > p:nth-of-type(2)::text").get()
         apartmentItems['market_type']           = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(9) > p:nth-of-type(2)::text").get()
-        apartmentItems['form_of_ownership']     = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(11) > p:nth-of-type(2)::text").get()
         apartmentItems['type_of_advertiser']    = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(15) > p:nth-of-type(2)::text").get()
         apartmentItems['additional_info']       = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(17) > p:nth-of-type(2) span::text").getall()
 
