@@ -61,6 +61,10 @@ class OlxScraperPipeline:
         # elevator_value = self.replace_elevator(elevator_value)
         # adapter['elevator'] = elevator_value
 
+        equipment = adapter.get('equipment')
+        result['anti_burglary_doors_windows'], result['anti_burglary_blinds'], result['furniture'], result['air_conditioning'], result['internet'], result['entryphone'], result['stove'], result['alarm_system'] = self.parse_equipment(equipment)
+
+
         return result
 
     @staticmethod
@@ -209,3 +213,21 @@ class OlxScraperPipeline:
         patio = 1 if "taras" in additional_info else  0
 
         return balcony, garage, utility_room, basement, separate_kitchen, garden, patio
+    
+    @staticmethod
+    def parse_equipment(equipment: List) -> int:
+        """
+        returns int 1 or 0 depends on scraped equipment in order:
+        anti-burglary doors and windows, anti-burglary blinds, furniture, air_conditioning, internet, entryphone, stove, alarm system
+        """
+        equipment = [eq.strip() for eq in equipment]
+        anti_burglary_doors_winodws = 1 if "drzwi / okna antywłamaniowe" in equipment else 0 
+        furniture = 1 if "meble" in equipment else 0 
+        air_conditioning = 1 if "klimatyzacja" in equipment else 0 
+        internet = 1 if "internet" in equipment else 0 
+        entryphone= 1 if "domofon / wideofon" in equipment else 0 
+        anti_burglary_blinds = 1 if "rolety antywłamaniowe" in equipment else 0
+        stove = 1 if "kuchenka" in equipment else 0
+        alarm_system = 1 if "system alarmowy" in equipment else 0
+
+        return anti_burglary_doors_winodws, anti_burglary_blinds, furniture, air_conditioning, internet, entryphone, stove, alarm_system

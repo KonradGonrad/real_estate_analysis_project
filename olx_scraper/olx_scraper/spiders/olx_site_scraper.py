@@ -127,7 +127,7 @@ class OlxSiteScraperSpider(scrapy.Spider):
         # apartmentItems['windows']               = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div:nth-of-type(7) > p:nth-of-type(2)::text").get()
         # apartmentItems['energy_certificate']    = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div:nth-of-type(9) > p:nth-of-type(2)::text").get()
 
-        # apartmentItems['equipment']             = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(2) > div  p:nth-of-type(2)::text").get()
+        apartmentItems['equipment']             = response.css(f"main > div:nth-of-type({idx}) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(2) > div  p:nth-of-type(2)::text").getall()
 
         yield apartmentItems
 

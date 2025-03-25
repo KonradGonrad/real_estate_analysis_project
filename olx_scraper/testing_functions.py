@@ -1,0 +1,113 @@
+from typing import List
+
+loc_1 = "ul. Natalińska, Otrębusy, Brwinów, pruszkowski, mazowieckie"
+loc_2 =  "Heleny Żybutowskiej, Stargard, stargardzki, zachodniopomorskie"
+loc_3 = "ul. Wierzbowa, Porosły, Choroszcz, białostocki, podlaskie"
+loc_4 = "ul. Armii Krajowej, Sobótka, Sobótka, wrocławski, dolnośląskie"
+loc_5 = "Kiełczów, Długołęka, wrocławski, dolnośląskie"
+loc_6 = "ul. Chorwacka, Różanka, Psie Pole, Wrocław, dolnośląskie"
+loc_7 = "ul. Kolorowa, Ustka, słupski, pomorskie"
+loc_8 = "Krasowa, Krzeszowice, Krzeszowice, krakowski, małopolskie"
+loc_9 = "ul. Graniczna 1, Ustroń, cieszyński, śląskie"
+
+locations = [loc_1, loc_2, loc_3, loc_4, loc_5, loc_6, loc_7, loc_8, loc_9]
+
+def parse_location(location: str):
+    splitted_locations = location.split(",")
+    splitted_locations = [item.strip() for item in splitted_locations]
+    
+    # Street
+    if 'ul' in splitted_locations[0] or splitted_locations[0].endswith('a') or splitted_locations[0].endswith('skiej'):
+        street = "ul. "+ splitted_locations[0] if "ul" not in splitted_locations[0] else splitted_locations[0]
+    else:
+        street = None
+    
+    # city
+    if splitted_locations[-2].endswith('ki'):
+        city = splitted_locations[0 if street == None else 1]
+    else:
+        city = splitted_locations[-2]
+
+    # state
+    state = splitted_locations[-1]
+
+    return street, city, state
+
+
+
+
+
+for location in locations:
+    print(parse_location(location=location))
+
+
+add_1 = ["balkon", " garaż/miejsce parkingowe", " pom. użytkowe"]
+add_2 = ["piwnica", " oddzielna kuchnia"]
+add_3 = ["ogródek", " taras", " garaż/miejsce parkingowe"]
+add_4 = ["garaż/miejsce parkingowe", " oddzielna kuchnia"]
+add_5 = [None]
+
+def parse_additional_info(additional_info: List) -> int:
+    """
+    returns informations from additional info scraped in order:
+    balcony, garage, utility_room, basement, separete_kitchen, garden, patio, 
+    """
+    additional_info = [info.strip() for info in additional_info if isinstance(info, str)]
+    balcony = 1 if "balkon" in additional_info else 0
+    garage = 1 if "garaż/miejsce parkingowe" in additional_info else 0
+    utility_room = 1 if "pom. użytkowe" in additional_info else 0
+    basement = 1 if "piwnica" in additional_info else 0
+    separate_kitchen = 1 if "oddzielna kuchnia" in additional_info else 0
+    garden = 1 if "ogródek" in additional_info else 0
+    patio = 1 if "taras" in additional_info else  0
+
+    return balcony, garage, utility_room, basement, separate_kitchen, garden, patio
+
+balcony, garage, utility_room, basement, separate_kitchen, garden, patio = parse_additional_info(add_5)
+
+print(f"""Balcony: {balcony},
+        \nGarage; {garage},
+        \nUtility room: {utility_room}, 
+        \nBasement: {basement}, 
+        \nSeperate kitchen: {separate_kitchen},
+        \nGarden: {garden},
+        \nPatio: {patio}""")
+
+eq_1 = ["drzwi / okna antywłamaniowe"]
+eq_2 = ["meble"]
+eq_3 = ["klimatyzacja"]
+eq_4 = ["internet"]
+eq_5 = ["domofon / wideofon"]
+eq_6 = ["rolety antywłamaniowe"]
+eq_7 = ["kuchenka"]
+eq_8 = ["system alarmowy"]
+eq_9 = [""]
+eq_10 = [None]
+
+def parse_equipment(equipment: List) -> int:
+    """
+    returns int 1 or 0 depends on scraped equipment in order:
+    anti-burglary doors and windows, anti-burglary blinds, furniture, air_conditioning, internet, entryphone, stove, alarm system
+    """
+    equipment = [eq.strip() for eq in equipment if isinstance(eq, str)]
+    anti_burglary_doors_windows = 1 if "drzwi / okna antywłamaniowe" in equipment else 0 
+    furniture = 1 if "meble" in equipment else 0 
+    air_conditioning = 1 if "klimatyzacja" in equipment else 0 
+    internet = 1 if "internet" in equipment else 0 
+    entryphone= 1 if "domofon / wideofon" in equipment else 0 
+    anti_burglary_blinds = 1 if "rolety antywłamaniowe" in equipment else 0
+    stove = 1 if "kuchenka" in equipment else 0
+    alarm_system = 1 if "system alarmowy" in equipment else 0
+
+    return anti_burglary_doors_windows, anti_burglary_blinds, furniture, air_conditioning, internet, entryphone, stove, alarm_system
+
+anti_burglary_doors_windows, anti_burglary_blinds, furniture, air_conditioning, internet, entryphone, stove, alarm_system = parse_equipment(eq_10)
+
+print(f"""anti_burglary_doors_windows: {anti_burglary_doors_windows},
+        \nanti_burglary_blinds; {anti_burglary_blinds},
+        \nfurniture: {furniture}, 
+        \nair_conditioning: {air_conditioning}, 
+        \ninternet: {internet},
+        \nentryphone: {entryphone},
+        \nstove: {stove}
+        \nalarm_system: {alarm_system}""")

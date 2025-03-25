@@ -43,7 +43,7 @@ class ApartmentItems(scrapy.Item):
     # building_material = scrapy.Field()
     # windows = scrapy.Field()
     # energy_certificate = scrapy.Field()
-    # equipment = scrapy.Field()
+    equipment = scrapy.Field()
 
 
 class Result(scrapy.Item):
@@ -74,6 +74,16 @@ class Result(scrapy.Item):
     separate_kitchen = scrapy.Field()
     patio = scrapy.Field()
     garden = scrapy.Field()
+
+    #equipment
+    anti_burglary_doors_windows = scrapy.Field() 
+    anti_burglary_blinds = scrapy.Field() 
+    furniture = scrapy.Field() 
+    air_conditioning = scrapy.Field() 
+    internet = scrapy.Field() 
+    entryphone = scrapy.Field()
+    stove = scrapy.Field() 
+    alarm_system = scrapy.Field() 
 
     #sell info
     type_of_advertiser = scrapy.Field()
