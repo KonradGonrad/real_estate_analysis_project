@@ -16,6 +16,7 @@ class OlxScraperPipeline:
         adapter = ItemAdapter(item)
         result = Result()
 
+        # link
         if SCRAP_SETTINGS['SCRAP_LINK']:
             result['link'] = adapter.get('link')
 
@@ -33,6 +34,7 @@ class OlxScraperPipeline:
             rent_value = self.replace_value(rent_value)
             result['rent'] = rent_value
 
+        # building info
         if SCRAP_SETTINGS['SCRAP_BUILDING_INFO']:
             meters_value = adapter.get('meters')
             meters_value = self.replace_value(meters_value)
@@ -55,6 +57,7 @@ class OlxScraperPipeline:
             finish_level = self.parse_finish_level(finish_level)
             result['finish_level'] = finish_level
 
+        # location
         if SCRAP_SETTINGS['SCRAP_LOCATION']:
             location = adapter.get('location')
             street, city, state = self.parse_location(location)
@@ -62,10 +65,12 @@ class OlxScraperPipeline:
             result['city'] = city
             result['state'] = state
 
+        # additional info
         if SCRAP_SETTINGS['SCRAP_ADD_INFO']:
             additional_info = adapter.get('additional_info')
             result.update(self.parse_additional_info(additional_info))
 
+        # equipment
         if SCRAP_SETTINGS['SCRAP_EQUIPMENT']:
             equipment = adapter.get('equipment')
             # result['anti_burglary_doors_windows'], result['anti_burglary_blinds'], result['furniture'], result['air_conditioning'], result['internet'], result['entryphone'], result['stove'], result['alarm_system'] = self.parse_equipment(equipment)
