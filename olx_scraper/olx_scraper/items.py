@@ -49,13 +49,17 @@ class ApartmentItems(scrapy.Item):
 
 
 class Result(scrapy.Item):
+    # link
+    if SCRAP_SETTINGS["SCRAP_LINK"]:
+        link = scrapy.Field() 
+
     # price
     if SCRAP_SETTINGS["SCRAP_PRICE"]:
         price = scrapy.Field()
         price_per_m2 = scrapy.Field()
         rent = scrapy.Field()
 
-    #building info
+    # building info
     if SCRAP_SETTINGS["SCRAP_BUILDING_INFO"]:
         meters = scrapy.Field()
         rooms = scrapy.Field()
@@ -64,13 +68,13 @@ class Result(scrapy.Item):
         max_floor = scrapy.Field()
         finish_level = scrapy.Field()
 
-    #location
+    # location
     if SCRAP_SETTINGS["SCRAP_LOCATION"]:
         street = scrapy.Field()
         city = scrapy.Field()
         state = scrapy.Field()
 
-    #additional info
+    # additional info
     if SCRAP_SETTINGS["SCRAP_ADD_INFO"]:
         balcony = scrapy.Field()
         garage = scrapy.Field()
@@ -80,7 +84,7 @@ class Result(scrapy.Item):
         patio = scrapy.Field()
         garden = scrapy.Field()
 
-    #equipment
+    # equipment
     if SCRAP_SETTINGS["SCRAP_EQUIPMENT"]:
         anti_burglary_doors_windows = scrapy.Field() 
         anti_burglary_blinds = scrapy.Field() 
@@ -91,11 +95,10 @@ class Result(scrapy.Item):
         stove = scrapy.Field() 
         alarm_system = scrapy.Field() 
 
-    #sell info
+    # sell info
     if SCRAP_SETTINGS["SCRAP_SELL_INFO"]:
         type_of_advertiser = scrapy.Field()
         market_type = scrapy.Field()
 
     # other
-    if SCRAP_SETTINGS["SCRAP_OTHER"]:
-        link = scrapy.Field() 
+

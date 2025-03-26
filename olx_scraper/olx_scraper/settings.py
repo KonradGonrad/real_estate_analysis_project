@@ -41,6 +41,7 @@ SCRAP_ADD_INFO = True
 SCRAP_EQUIPMENT = True
 SCRAP_SELL_INFO = True
 SCRAP_OTHER = True
+SCRAP_LINK = True
 
 SCRAP_SETTINGS = {"SCRAP_PRICE": SCRAP_PRICE,
                   "SCRAP_BUILDING_INFO": SCRAP_BUILDING_INFO,
@@ -48,7 +49,8 @@ SCRAP_SETTINGS = {"SCRAP_PRICE": SCRAP_PRICE,
                   "SCRAP_ADD_INFO": SCRAP_ADD_INFO,
                   "SCRAP_EQUIPMENT": SCRAP_EQUIPMENT,
                   "SCRAP_SELL_INFO": SCRAP_SELL_INFO,
-                  "SCRAP_OTHER": SCRAP_OTHER}
+                  "SCRAP_OTHER": SCRAP_OTHER,
+                  "SCRAP_LINK": SCRAP_LINK}
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent

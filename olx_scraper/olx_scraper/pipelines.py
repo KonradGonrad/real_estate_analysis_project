@@ -16,7 +16,8 @@ class OlxScraperPipeline:
         adapter = ItemAdapter(item)
         result = Result()
 
-        result['link'] = adapter.get('link')
+        if SCRAP_SETTINGS['SCRAP_LINK']:
+            result['link'] = adapter.get('link')
 
         # price
         if SCRAP_SETTINGS['SCRAP_PRICE']:
@@ -32,49 +33,48 @@ class OlxScraperPipeline:
             rent_value = self.replace_value(rent_value)
             result['rent'] = rent_value
 
-        meters_value = adapter.get('meters')
-        meters_value = self.replace_value(meters_value)
-        result['meters'] = meters_value
+        if SCRAP_SETTINGS['SCRAP_BUILDING_INFO']:
+            meters_value = adapter.get('meters')
+            meters_value = self.replace_value(meters_value)
+            result['meters'] = meters_value
 
-        rooms_value = str(adapter.get('rooms'))
-        rooms_value = self.replace_value(rooms_value)
-        result['rooms'] = rooms_value
+            rooms_value = str(adapter.get('rooms'))
+            rooms_value = self.replace_value(rooms_value)
+            result['rooms'] = rooms_value
+
+            heating = adapter.get('heating')
+            heating = self.parse_heating(heating=heating)
+            result['heating'] = heating
+
+            floor = adapter.get('floor')
+            floor, floor_max = self.parse_floor(floor=floor)
+            result['floor'] = floor
+            result['max_floor'] = floor_max
+
+            finish_level = adapter.get("finish_level")
+            finish_level = self.parse_finish_level(finish_level)
+            result['finish_level'] = finish_level
+
+        if SCRAP_SETTINGS['SCRAP_LOCATION']:
+            location = adapter.get('location')
+            street, city, state = self.parse_location(location)
+            result['street'] = street
+            result['city'] = city
+            result['state'] = state
+
+        if SCRAP_SETTINGS['SCRAP_ADD_INFO']:
+            additional_info = adapter.get('additional_info')
+            result.update(self.parse_additional_info(additional_info))
+
+        if SCRAP_SETTINGS['SCRAP_EQUIPMENT']:
+            equipment = adapter.get('equipment')
+            # result['anti_burglary_doors_windows'], result['anti_burglary_blinds'], result['furniture'], result['air_conditioning'], result['internet'], result['entryphone'], result['stove'], result['alarm_system'] = self.parse_equipment(equipment)
+            result.update(self.parse_equipment(equipment))
 
 
-
-        location = adapter.get('location')
-        street, city, state = self.parse_location(location)
-        result['street'] = street
-        result['city'] = city
-        result['state'] = state
-
-        floor = adapter.get('floor')
-        floor, floor_max = self.parse_floor(floor=floor)
-        result['floor'] = floor
-        result['max_floor'] = floor_max
-
-        heating = adapter.get('heating')
-        heating = self.parse_heating(heating=heating)
-        result['heating'] = heating
-
-        finish_level = adapter.get("finish_level")
-        finish_level = self.parse_finish_level(finish_level)
-        result['finish_level'] = finish_level
-
-        # additional_info = adapter.get("additional_info")
         # elevator_value = adapter.get('elevator')
         # elevator_value = self.replace_elevator(elevator_value)
         # adapter['elevator'] = elevator_value
-
-        additional_info = adapter.get('additional_info')
-        result.update(self.parse_additional_info(additional_info))
-
-        equipment = adapter.get('equipment')
-        # result['anti_burglary_doors_windows'], result['anti_burglary_blinds'], result['furniture'], result['air_conditioning'], result['internet'], result['entryphone'], result['stove'], result['alarm_system'] = self.parse_equipment(equipment)
-        result.update(self.parse_equipment(equipment))
-
-
-
         return result
 
     @staticmethod
