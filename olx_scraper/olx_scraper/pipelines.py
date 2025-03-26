@@ -57,11 +57,18 @@ class OlxScraperPipeline:
             finish_level = self.parse_finish_level(finish_level)
             result['finish_level'] = finish_level
 
-            type_of_building = adapter.get('type_of_building')
-            result['type_of_building'] = type_of_building
+            building_and_materials = {adapter.get('year_of_building'),
+                                      adapter.get('elevator'),
+                                      adapter.get('type_of_building'),
+                                      adapter.get('building_material'),
+                                      adapter.get('windows_material'),
+                                      adapter.get('energy_certificate'),
+                                      adapter.get('safety')}
+            result['sumup'] = building_and_materials
+            
 
-            building_material = adapter.get('building_material')
-            result['building_material'] = building_material
+
+
 
         # location
         if SCRAP_SETTINGS['SCRAP_LOCATION']:

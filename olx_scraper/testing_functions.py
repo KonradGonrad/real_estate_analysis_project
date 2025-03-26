@@ -157,3 +157,18 @@ eq_4 = ("zmywarka", " lodówka", " meble", " kuchenka", " telewizor", " pralka",
 
 eq = set(i.strip() for i in (eq_1 + eq_2 + eq_3 + eq_4))
 print(eq, len(eq))
+
+
+identificators = ['Rok budowy', 'Winda', 'Bezpieczeństwo']
+items_id = ['year_of_building', 'elevator', 'safety']
+
+def parse_building_and_materials(x: str):
+    if x.strip() in identificators:
+        return items_id[identificators.index(x.strip())]
+    else:
+        return None
+    
+print(parse_building_and_materials("Rok budowy"))
+
+for x in range(1, 5, 2):
+    print(x)

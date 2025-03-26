@@ -10,16 +10,12 @@ from .settings import SCRAP_SETTINGS
 class ApartmentItems(scrapy.Item):
     # define the fields for your item here like:
     # div_count = scrapy.Field()
-    
+
     link = scrapy.Field()
 
     title = scrapy.Field()
 
     location = scrapy.Field()
-    #From location:
-    street = scrapy.Field()
-    city = scrapy.Field()
-    state = scrapy.Field()
 
     price = scrapy.Field()
     price_per_m2 = scrapy.Field()
@@ -37,14 +33,14 @@ class ApartmentItems(scrapy.Item):
     additional_info = scrapy.Field()
 
     #Building_and_materials
-    # year_of_building = scrapy.Field()
-    # elevator = scrapy.Field()
-    # safety = scrapy.Field()
-
-    # type_of_building = scrapy.Field()
-    # building_material = scrapy.Field()
-    # windows = scrapy.Field()
-    # energy_certificate = scrapy.Field()
+    building_and_materials_divs = scrapy.Field()
+    year_of_building = scrapy.Field()
+    elevator = scrapy.Field()
+    type_of_building = scrapy.Field()
+    building_material = scrapy.Field()
+    windows_material = scrapy.Field()
+    energy_certificate = scrapy.Field()
+    safety = scrapy.Field()
 
     equipment_1 = scrapy.Field()
     equipment_2 = scrapy.Field()
@@ -70,10 +66,17 @@ class Result(scrapy.Item):
         max_floor = scrapy.Field()
         finish_level = scrapy.Field()
 
+
+        building_and_materials_divs = scrapy.Field()
+        
+        year_of_building = scrapy.Field()
+        elevator = scrapy.Field()
         type_of_building = scrapy.Field()
         building_material = scrapy.Field()
-        # windows = scrapy.Field()
-        # energy_certificate = scrapy.Field()
+        windows_material = scrapy.Field()
+        energy_certificate = scrapy.Field()
+        safety = scrapy.Field()
+        sumup = scrapy.Field()
 
     # location
     if SCRAP_SETTINGS["SCRAP_LOCATION"]:
