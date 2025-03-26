@@ -115,6 +115,7 @@ class OlxSiteScraperSpider(scrapy.Spider):
         # Elevator error, cos its getting also year of building -> to repair
         # num_building_and_materials              = len(response.css('main > div:nth-of-type(4) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > div[hidden]:nth-of-type(1) > div > div'))
 
+
         # identificators = ['Rok budowy', 'Winda', 'Bezpieczeństwo']
         # items_id = ['year_of_building', 'elevator', 'safety']
         # for id in identificators: 
