@@ -144,3 +144,16 @@ SCRAP_SETTINGS = {"SCRAP_PRICE": SCRAP_PRICE,
 
 
 print(SCRAP_SETTINGS["SCRAP_PRICE"])
+
+x = [1, 2]
+y = ["1", 3]
+print(x + y)
+
+eq_1 = ("domofon / wideofon", "telewizja kablowa", " internet", "system alarmowy")
+eq_2 = ("zmywarka", " lodówka", " meble", " piekarnik", " kuchenka", " telewizor", " pralka", " klimatyzacja", "drzwi / okna antywłamaniowe", " domofon / wideofon", "telewizja kablowa", " internet", " telefon")
+eq_3 = ("zmywarka", " lodówka", " meble", " piekarnik", " kuchenka", " telewizor", " pralka", "drzwi / okna antywłamaniowe", " domofon / wideofon", "telewizja kablowa", " internet")
+eq_4 = ("zmywarka", " lodówka", " meble", " kuchenka", " telewizor", " pralka", "drzwi / okna antywłamaniowe", " domofon / wideofon", "telewizja kablowa", " internet")
+
+
+eq = set(i.strip() for i in (eq_1 + eq_2 + eq_3 + eq_4))
+print(eq, len(eq))

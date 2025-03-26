@@ -45,7 +45,9 @@ class ApartmentItems(scrapy.Item):
     # building_material = scrapy.Field()
     # windows = scrapy.Field()
     # energy_certificate = scrapy.Field()
-    equipment = scrapy.Field()
+
+    equipment_1 = scrapy.Field()
+    equipment_2 = scrapy.Field()
 
 
 class Result(scrapy.Item):
@@ -67,6 +69,11 @@ class Result(scrapy.Item):
         floor = scrapy.Field()
         max_floor = scrapy.Field()
         finish_level = scrapy.Field()
+
+        type_of_building = scrapy.Field()
+        building_material = scrapy.Field()
+        # windows = scrapy.Field()
+        # energy_certificate = scrapy.Field()
 
     # location
     if SCRAP_SETTINGS["SCRAP_LOCATION"]:
@@ -94,6 +101,13 @@ class Result(scrapy.Item):
         entryphone = scrapy.Field()
         stove = scrapy.Field() 
         alarm_system = scrapy.Field() 
+        oven = scrapy.Field() 
+        tv = scrapy.Field() 
+        washing_machine = scrapy.Field()
+        cable_tv = scrapy.Field()
+        dishwasher = scrapy.Field()
+        fridge = scrapy.Field()
+        phone = scrapy.Field()
 
     # sell info
     if SCRAP_SETTINGS["SCRAP_SELL_INFO"]:

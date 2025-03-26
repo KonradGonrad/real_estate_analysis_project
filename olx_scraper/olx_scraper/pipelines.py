@@ -57,6 +57,12 @@ class OlxScraperPipeline:
             finish_level = self.parse_finish_level(finish_level)
             result['finish_level'] = finish_level
 
+            type_of_building = adapter.get('type_of_building')
+            result['type_of_building'] = type_of_building
+
+            building_material = adapter.get('building_material')
+            result['building_material'] = building_material
+
         # location
         if SCRAP_SETTINGS['SCRAP_LOCATION']:
             location = adapter.get('location')
@@ -72,7 +78,9 @@ class OlxScraperPipeline:
 
         # equipment
         if SCRAP_SETTINGS['SCRAP_EQUIPMENT']:
-            equipment = adapter.get('equipment')
+            equipment_1 = adapter.get('equipment_1')
+            equipment_2 = adapter.get('equipment_2')
+            equipment = equipment_1 + equipment_2
             # result['anti_burglary_doors_windows'], result['anti_burglary_blinds'], result['furniture'], result['air_conditioning'], result['internet'], result['entryphone'], result['stove'], result['alarm_system'] = self.parse_equipment(equipment)
             result.update(self.parse_equipment(equipment))
 
@@ -250,6 +258,13 @@ class OlxScraperPipeline:
         anti_burglary_blinds = 1 if "rolety antywłamaniowe" in equipment else 0
         stove = 1 if "kuchenka" in equipment else 0
         alarm_system = 1 if "system alarmowy" in equipment else 0
+        oven = 1 if "piekarnik" in equipment else 0
+        tv = 1 if "telewizor" in equipment else 0 
+        washing_machine = 1 if "pralka" in equipment else 0 
+        cable_tv = 1 if "telewizja kablowa" in equipment else 0 
+        dishwasher = 1 if "zmywarka" in equipment else 0
+        fridge = 1 if "lodówka" in equipment else 0
+        phone = 1 if "telefon" in equipment else 0
 
         return {"anti_burglary_doors_windows": anti_burglary_doors_windows,
                 "anti_burglary_blinds": anti_burglary_blinds,
@@ -258,4 +273,11 @@ class OlxScraperPipeline:
                 "internet": internet,
                 "entryphone": entryphone,
                 "stove": stove,
-                "alarm_system": alarm_system}
+                "alarm_system": alarm_system,
+                "oven": oven,
+                "tv": tv,
+                "washing_machine": washing_machine,
+                "cable_tv": cable_tv,
+                "dishwasher": dishwasher,
+                "fridge": fridge,
+                "phone": phone}
