@@ -1,1 +1,0 @@
-MYSCRAPEOPS_API_KEY = "Your api code"
