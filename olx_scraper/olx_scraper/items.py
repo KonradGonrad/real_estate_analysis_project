@@ -65,9 +65,6 @@ class Result(scrapy.Item):
         floor = scrapy.Field()
         max_floor = scrapy.Field()
         finish_level = scrapy.Field()
-
-
-        building_and_materials_divs = scrapy.Field()
         
         year_of_building = scrapy.Field()
         elevator = scrapy.Field()
@@ -75,8 +72,8 @@ class Result(scrapy.Item):
         building_material = scrapy.Field()
         windows_material = scrapy.Field()
         energy_certificate = scrapy.Field()
-        safety = scrapy.Field()
-        sumup = scrapy.Field()
+        monitoring_or_security = scrapy.Field()
+        closed_area = scrapy.Field()
 
     # location
     if SCRAP_SETTINGS["SCRAP_LOCATION"]:

@@ -16,6 +16,9 @@ class OlxScraperPipeline:
         adapter = ItemAdapter(item)
         result = Result()
 
+        print("DEBUG: year_of_building =", adapter.get('year_of_building'))
+        print("DEBUG: year_of_building (all) =", adapter.get('year_of_building'))
+
         # link
         if SCRAP_SETTINGS['SCRAP_LINK']:
             result['link'] = adapter.get('link')
@@ -56,19 +59,13 @@ class OlxScraperPipeline:
             finish_level = adapter.get("finish_level")
             finish_level = self.parse_finish_level(finish_level)
             result['finish_level'] = finish_level
-
-            building_and_materials = {adapter.get('year_of_building'),
-                                      adapter.get('elevator'),
-                                      adapter.get('type_of_building'),
-                                      adapter.get('building_material'),
-                                      adapter.get('windows_material'),
-                                      adapter.get('energy_certificate'),
-                                      adapter.get('safety')}
-            result['sumup'] = building_and_materials
             
-
-
-
+            result.update(self.parse_building_and_materials(year_of_building=adapter.get('year_of_building'),
+                                                            elevator=adapter.get('elevator'),
+                                                            type_of_building=adapter.get('type_of_building'),
+                                                            windows_material=adapter.get('windows_material'),
+                                                            energy_certificate=adapter.get('energy_certificate'),
+                                                            safety=adapter.get('safety')))
 
         # location
         if SCRAP_SETTINGS['SCRAP_LOCATION']:
@@ -80,7 +77,7 @@ class OlxScraperPipeline:
 
         # additional info
         if SCRAP_SETTINGS['SCRAP_ADD_INFO']:
-            additional_info = adapter.get('additional_info')
+            additional_info = adapter.get('additional_info') or []
             result.update(self.parse_additional_info(additional_info))
 
         # equipment
@@ -233,22 +230,18 @@ class OlxScraperPipeline:
         returns informations from additional info scraped in order:
         balcony, garage, utility_room, basement, separete_kitchen, garden, patio, 
         """
-        additional_info = [info.strip() for info in additional_info if isinstance(info, str)]
-        balcony = 1 if "balkon" in additional_info else 0
-        garage = 1 if "garaż/miejsce parkingowe" in additional_info else 0
-        utility_room = 1 if "pom. użytkowe" in additional_info else 0
-        basement = 1 if "piwnica" in additional_info else 0
-        separate_kitchen = 1 if "oddzielna kuchnia" in additional_info else 0
-        garden = 1 if "ogródek" in additional_info else 0
-        patio = 1 if "taras" in additional_info else  0
+        if not isinstance(additional_info, list):
+            additional_info = []
 
-        return {"balcony": balcony,
-                "garage": garage, 
-                "utility_room": utility_room, 
-                "basement":basement, 
-                "separate_kitchen" : separate_kitchen, 
-                "garden": garden, 
-                "patio": patio}
+        additional_info = [info.strip() for info in additional_info if isinstance(info, str)]
+
+        return {"balcony": 1 if "balkon" in additional_info else 0,
+                "garage": 1 if "garaż/miejsce parkingowe" in additional_info else 0,
+                "utility_room": 1 if "pom. użytkowe" in additional_info else 0,
+                "basement": 1 if "piwnica" in additional_info else 0, 
+                "separate_kitchen" : 1 if "oddzielna kuchnia" in additional_info else 0, 
+                "garden": 1 if "ogródek" in additional_info else 0,
+                "patio": 1 if "taras" in additional_info else  0}
     
     @staticmethod
     def parse_equipment(equipment: List) -> Dict:
@@ -288,3 +281,91 @@ class OlxScraperPipeline:
                 "dishwasher": dishwasher,
                 "fridge": fridge,
                 "phone": phone}
+    
+    @staticmethod
+    def parse_building_and_materials(year_of_building = None,
+                                 elevator = None,
+                                 type_of_building = None,
+                                 building_material = None,
+                                 windows_material = None,
+                                 energy_certificate = None,
+                                 safety = None):
+    
+        def parse_type_of_building(x):
+            """
+            null = 0
+            kamienica = 1
+            apartamentowiec = 2
+            dom wolnostojacy = 3
+            blok = 4
+            szeregowiec = 5
+            """
+            match x:
+                case None:
+                    return 0
+                case "kamienica":
+                    return 1
+                case "apartamentowiec":
+                    return 2
+                case "dom wolnostojący":
+                    return 3
+                case "blok":
+                    return 4
+                case "szeregowiec":
+                    return 5
+                
+        def parse_building_material(x):
+            """
+            null = 0
+            cegla = 1
+            pustak = 2
+            wielka plyta = 3
+            silikat = 4
+            zelbet = 5
+            beton komorkowy = 6
+            beton = 7
+            inny = 8
+            """
+            match x:
+                case None:
+                    return 0
+                case 'cegła':
+                    return 1
+                case 'pustak':
+                    return 2
+                case 'wielka płyta':
+                    return 3
+                case 'silikat':
+                    return 4
+                case 'żelbet':
+                    return 5
+                case 'beton komórkowy':
+                    return 6
+                case 'beton':
+                    return 7
+                case 'inny':
+                    return 8
+            
+        def parse_windows_material(x):
+            """
+            null = 0
+            plastikowe = 1
+            drewniane = 2
+            """
+            match x:
+                case None:
+                    return 0
+                case 'plastikowe':
+                    return 1
+                case 'drewniane':
+                    return 2
+
+        return {"year_of_building": int(year_of_building) if isinstance(year_of_building, str) else 0,
+                "elevator": 1 if elevator == 'tak' else 0,
+                "type_of_building": parse_type_of_building(type_of_building),
+                "building_material": parse_building_material(building_material),
+                'windows_material': parse_windows_material(windows_material),
+                'energy_certificate': energy_certificate if energy_certificate != None else 0,
+                'monitoring_or_security': 1 if safety and 'monitoring / ochrona' in safety else 0,
+                'closed_area': 1 if safety and 'teren zamknięty' in safety else 0 
+                }
