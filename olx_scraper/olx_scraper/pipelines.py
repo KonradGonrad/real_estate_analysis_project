@@ -116,12 +116,14 @@ class OlxScraperPipeline:
     
     @staticmethod
     def parse_location(location: str):
+        import re
         splitted_locations = location.split(",")
         splitted_locations = [item.strip() for item in splitted_locations]
-        
+        posses = ['ul.', 'al.', 'aleja', 'bulw.', 'bulwar', 'droga', 'trasa', 'most', 'trasa', 'gen.', 'marsz.', 'ks.', 'prof.', 'os.', 'osiedle']
+        ends = ('a', 'skiej', 'o', 'ego', 'ej', 'y', 'ów')
         # Street
-        if 'ul' in splitted_locations[0] or splitted_locations[0].endswith(('a', 'skiej', 'o')) :
-            street = "ul. "+ splitted_locations[0] if "ul" not in splitted_locations[0] else splitted_locations[0]
+        if any(prefix in splitted_locations[0] for prefix in posses) or splitted_locations[0].endswith(ends) or bool(re.search(r'\d', splitted_locations[0])) :
+            street = splitted_locations[0] 
         else:
             street = None
         
