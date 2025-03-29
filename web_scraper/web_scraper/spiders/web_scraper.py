@@ -88,7 +88,7 @@ class WebScraperSpider(scrapy.Spider):
         apartmentItems['title']                 = response.css(div_1 + "> h1::text").get()
         apartmentItems['location']              = response.css(div_1 + "> div:nth-of-type(2) > a::text").get()
         apartmentItems['price']                 = response.css(div_1 + "> div:nth-of-type(1) strong::text").get()
-        apartmentItems['price_per_m2']          = response.css(div_1 + "> div:nth-of-type(2) > div::text").get()
+        apartmentItems['price_per_m2']          = response.css(div_1 + "> div:nth-of-type(1) div::text").get()
         apartmentItems['meters']                = response.css(div_2 + "> div:nth-of-type(1) > button:nth-of-type(1) > div:nth-of-type(2)::text").get()
         apartmentItems['rooms']                 = response.css(div_2 + "> div:nth-of-type(1) > button:nth-of-type(2) > div:nth-of-type(2)::text").get()
         apartmentItems['heating']               = response.css(div_2 + "> div:nth-of-type(2) > div:nth-of-type(1) > p:nth-of-type(2)::text").get()

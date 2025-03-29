@@ -23,7 +23,6 @@ class WebScraperPipeline:
 
         # price
         if SCRAP_SETTINGS['SCRAP_PRICE']:
-            # To do there -> one function to parse price section and if there is no price per m2, to calculate this
             result['price'] = self.replace_value(adapter.get('price'))
             result['price_per_m2'] = self.replace_value(adapter.get('price_per_m2'))
             result['rent'] = self.replace_value(adapter.get('rent'))
@@ -58,6 +57,11 @@ class WebScraperPipeline:
             equipment_1, equipment_2 = adapter.get('equipment_1'), adapter.get('equipment_2')
             result.update(self.parse_equipment(equipment_1 + equipment_2))
 
+        # sell info
+        if SCRAP_SETTINGS['SCRAP_SELL_INFO']:
+            result['type_of_advertiser'] = self.parse_type_of_advertiser(adapter.get('type_of_advertiser'))
+            result['market_type'] = self.parse_market_type(adapter.get('market_type'))
+
         return result
 
     @staticmethod
@@ -73,12 +77,6 @@ class WebScraperPipeline:
             return float(x)
         else:
             return None
-
-    @staticmethod
-    def replace_elevator(x: str):
-        x = 1 if x =='tak' else 0
-
-        return x
     
     @staticmethod
     def parse_location(location: str):
@@ -115,88 +113,47 @@ class WebScraperPipeline:
 
         return floor, floor_max
     
-
-    # I'll split all provided below parsing functions into one or at least I'll use other method than case
     @staticmethod
     def parse_heating(heating: str):
-        """
-        Added this function to change strings into binary notation, for better performance of model.
-        0 = brak
-        1 = miejskie
-        2 = gazowe
-        3 = inne
-        4 = kotłownia
-        5 = elektryczne
-        """
-        match heating:
-            case 'brak informacji':
-                return 0
-            case 'miejskie':
-                return 1
-            case 'gazowe':
-                return 2
-            case 'inne':
-                return 3
-            case 'kotłownia':
-                return 4
-            case 'elektryczne':
-                return 5
+        heating_map = {
+            "brak informacji": 0,
+            "miejskie": 1,
+            "gazowe": 2,
+            "inne": 3,
+            "kotłownia": 4,
+            "elektryczne": 5
+        }
+        return heating_map[heating]
 
     @staticmethod
     def parse_finish_level(finish_level: str):
-        """
-        -||-
-        0 = brak
-        1 = do wykończenia
-        2 = do zamieszkania
-        3 = do remontu
-        """
-        match finish_level:
-            case "brak informacji":
-                return 0
-            case "do wykończenia":
-                return 1
-            case "do zamieszkania":
-                return 2
-            case "do remontu":
-                return 3
+        finish_level_map ={
+            "brak informacji": 0,
+            "do wykończenia": 1,
+            "do zamieszkania": 2,
+            "do remontu": 3
+        }
+        return finish_level_map[finish_level]
 
     @staticmethod
     def parse_market_type(market_type: str):
-        """
-        -||-
-        1 = pierwotny
-        2 = wtorny
-
-        """
-        match market_type:
-            case "pierwotny":
-                return 1
-            case "wtorny":
-                return 2
+        market_type_map = {
+            'pierwotny': 1,
+            'wtórny': 2
+        }
+        return market_type_map[market_type.strip()]
 
     @staticmethod
     def parse_type_of_advertiser(advertiser: str):
-        """
-        -||-
-        deweloper = 1
-        biuro nieruchomosci = 2
-        prywatny = 3
-        """
-        match advertiser:
-            case 'deweloper':
-                return 1
-            case 'biuro nieruchomości':
-                return 2
-            case 'prywatny':
-                return 3
+        type_of_advertiser_map = {
+            'deweloper': 1,
+            'biuro nieruchomości': 2,
+            'prywatny': 3
+        }
+        return type_of_advertiser_map[advertiser.strip()]
             
     @staticmethod
     def parse_additional_info(additional_info: List) -> Dict:
-        """
-        returns informations from additional info scraped in order:
-        balcony, garage, utility_room, basement, separete_kitchen, garden, patio, 
-        """
         if not isinstance(additional_info, list):
             additional_info = []
 
@@ -212,42 +169,22 @@ class WebScraperPipeline:
     
     @staticmethod
     def parse_equipment(equipment: List) -> Dict:
-        """
-        returns int 1 or 0 depends on scraped equipment in order:
-        anti-burglary doors and windows, anti-burglary blinds, furniture, air_conditioning, internet, entryphone, stove, alarm system
-        """
         equipment = [eq.strip() for eq in equipment if isinstance(eq, str)]
-        anti_burglary_doors_windows = 1 if "drzwi / okna antywłamaniowe" in equipment else 0 
-        furniture = 1 if "meble" in equipment else 0 
-        air_conditioning = 1 if "klimatyzacja" in equipment else 0 
-        internet = 1 if "internet" in equipment else 0 
-        entryphone= 1 if "domofon / wideofon" in equipment else 0 
-        anti_burglary_blinds = 1 if "rolety antywłamaniowe" in equipment else 0
-        stove = 1 if "kuchenka" in equipment else 0
-        alarm_system = 1 if "system alarmowy" in equipment else 0
-        oven = 1 if "piekarnik" in equipment else 0
-        tv = 1 if "telewizor" in equipment else 0 
-        washing_machine = 1 if "pralka" in equipment else 0 
-        cable_tv = 1 if "telewizja kablowa" in equipment else 0 
-        dishwasher = 1 if "zmywarka" in equipment else 0
-        fridge = 1 if "lodówka" in equipment else 0
-        phone = 1 if "telefon" in equipment else 0
-
-        return {"anti_burglary_doors_windows": anti_burglary_doors_windows,
-                "anti_burglary_blinds": anti_burglary_blinds,
-                "furniture": furniture,
-                "air_conditioning": air_conditioning,
-                "internet": internet,
-                "entryphone": entryphone,
-                "stove": stove,
-                "alarm_system": alarm_system,
-                "oven": oven,
-                "tv": tv,
-                "washing_machine": washing_machine,
-                "cable_tv": cable_tv,
-                "dishwasher": dishwasher,
-                "fridge": fridge,
-                "phone": phone}
+        return {"anti_burglary_doors_windows": 1 if "drzwi / okna antywłamaniowe" in equipment else 0 ,
+                "anti_burglary_blinds": 1 if "rolety antywłamaniowe" in equipment else 0,
+                "furniture": 1 if "meble" in equipment else 0,
+                "air_conditioning": 1 if "klimatyzacja" in equipment else 0,
+                "internet": 1 if "internet" in equipment else 0,
+                "entryphone": 1 if "domofon / wideofon" in equipment else 0,
+                "stove": 1 if "kuchenka" in equipment else 0,
+                "alarm_system": 1 if "system alarmowy" in equipment else 0,
+                "oven": 1 if "piekarnik" in equipment else 0,
+                "tv": 1 if "telewizor" in equipment else 0 ,
+                "washing_machine": 1 if "pralka" in equipment else 0, 
+                "cable_tv": 1 if "telewizja kablowa" in equipment else 0,
+                "dishwasher": 1 if "zmywarka" in equipment else 0,
+                "fridge": 1 if "lodówka" in equipment else 0,
+                "phone": 1 if "telefon" in equipment else 0,}
     
     @staticmethod
     def parse_building_and_materials(year_of_building = None,
@@ -258,73 +195,37 @@ class WebScraperPipeline:
                                  safety = None):
     
         def parse_type_of_building(x):
-            """
-            null = 0
-            kamienica = 1
-            apartamentowiec = 2
-            dom wolnostojacy = 3
-            blok = 4
-            szeregowiec = 5
-            """
-            match x:
-                case None:
-                    return 0
-                case "kamienica":
-                    return 1
-                case "apartamentowiec":
-                    return 2
-                case "dom wolnostojący":
-                    return 3
-                case "blok":
-                    return 4
-                case "szeregowiec":
-                    return 5
+            type_of_building_map = {
+                None: 0,
+                'kamienica': 1,
+                'apartamentowiec': 2,
+                'dom wolnostojący': 3,
+                'blok': 4,
+                'szeregowiec': 5
+            }
+            return type_of_building_map[type_of_building]
                 
         def parse_building_material(x):
-            """
-            null = 0
-            cegla = 1
-            pustak = 2
-            wielka plyta = 3
-            silikat = 4
-            zelbet = 5
-            beton komorkowy = 6
-            beton = 7
-            inny = 8
-            """
-            match x:
-                case None:
-                    return 0
-                case 'cegła':
-                    return 1
-                case 'pustak':
-                    return 2
-                case 'wielka płyta':
-                    return 3
-                case 'silikat':
-                    return 4
-                case 'żelbet':
-                    return 5
-                case 'beton komórkowy':
-                    return 6
-                case 'beton':
-                    return 7
-                case 'inny':
-                    return 8
+            building_material_map = {
+                None: 0,
+                'cegła': 1,
+                'pustak': 2,
+                'wielka płyta': 3,
+                'silikat': 4,
+                'żelbet': 5,
+                'beton komórkowy': 6,
+                'beton': 7,
+                'inny': 8
+            }
+            return building_material_map[building_material]
             
         def parse_windows_material(x):
-            """
-            null = 0
-            plastikowe = 1
-            drewniane = 2
-            """
-            match x:
-                case None:
-                    return 0
-                case 'plastikowe':
-                    return 1
-                case 'drewniane':
-                    return 2
+            windows_material_map = {
+                None: 0,
+                'plastikowe': 1,
+                'drewniane': 2
+            }
+            return windows_material_map[windows_material]
 
         return {"year_of_building": int(year_of_building) if isinstance(year_of_building, str) else 0,
                 "elevator": 1 if elevator == 'tak' else 0,

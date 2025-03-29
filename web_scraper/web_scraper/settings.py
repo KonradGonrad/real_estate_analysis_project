@@ -33,7 +33,7 @@ FEEDS = {
 }
 
 # Settings about scraping
-SCRAP_WAIT_TIME = 2
+SCRAP_WAIT_TIME = 1
 
 SCRAP_PRICE = True
 SCRAP_BUILDING_INFO = True
