@@ -37,6 +37,8 @@ class ApartmentItems(scrapy.Item):
 
 
 class Result(scrapy.Item):
+    #database id
+    listing_id = scrapy.Field()
     # link
     if SCRAP_SETTINGS["SCRAP_LINK"]:
         link = scrapy.Field() 
@@ -103,3 +105,4 @@ class Result(scrapy.Item):
     if SCRAP_SETTINGS["SCRAP_SELL_INFO"]:
         type_of_advertiser = scrapy.Field()
         market_type = scrapy.Field()
+    

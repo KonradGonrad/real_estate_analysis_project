@@ -10,6 +10,8 @@ import re
 from itemadapter import ItemAdapter
 from .items import Result
 from .settings import SCRAP_SETTINGS
+from .settings import DATABASE_SETTINGS, DATABASE_CREATOR, DATABASE_INSERT
+
 
 
 class WebScraperPipeline:
@@ -235,20 +237,39 @@ class WebScraperPipeline:
                 'monitoring_or_security': 1 if safety and 'monitoring / ochrona' in safety else 0,
                 'closed_area': 1 if safety and 'teren zamknięty' in safety else 0 
                 }
-    
-# import mysql.connector
-# class SaveToMySQLPipeline:
-#     def __init__(self):
-#         self.conn = mysql.connector.connect(
-#             host = 'localhost',
-#             user = 'root',
-#             password = 'ZAQ!2wsx',
-#             database = 'housing_data'
-#         )
 
-#         self.cur = self.conn.cursor()
+import mysql.connector  
+class SaveToMySQLPipeline:
+    def __init__(self):
+        self.conn = mysql.connector.connect(
+            host = DATABASE_SETTINGS['HOST'],
+            user = DATABASE_SETTINGS['USER'],
+            password = DATABASE_SETTINGS['PASSWORD'],
+            database = DATABASE_SETTINGS['NAME']
+        )
 
-#         self.cur.execute("""
-#                 CREATE TABLE IF NOT EXISTS price{
-#                          id int }
-#         """)
+        self.cur = self.conn.cursor()
+
+        # CREATING TABLES AND DATABASE STRUCTURE
+        for table in DATABASE_CREATOR.values():
+            self.cur.execute(table)
+
+    def process_item(self, item, spider):
+        adapter = ItemAdapter(item)
+
+        COMMAND, DATA = DATABASE_INSERT['LISTING_INSERT'](adapter)
+        self.cur.execute(COMMAND, DATA)
+
+        listing_id = self.cur.lastrowid
+        adapter['listing_id'] = listing_id
+
+        for key, function in DATABASE_INSERT.items():
+            if not DATABASE_INSERT['LISTING_INSERT']:
+                COMMAND, DATA = function(adapter)
+                self.cur.execute(COMMAND, DATA)
+
+            self.conn.commit()
+
+    def close_spider(self, spider):
+        self.cur.close()
+        self.conn.close

@@ -1,5 +1,6 @@
 from shutil import which
 from web_scraper.api_keys import MYSCRAPEOPS_API_KEY 
+from .database_settings import *
 # from olx_scraper.api_keys_example import MYSCRAPEOPS_API_KEY 
 
 # Scrapy settings for olx_scraper project
@@ -51,6 +52,29 @@ SCRAP_SETTINGS = {"SCRAP_PRICE": SCRAP_PRICE,
                   "SCRAP_SELL_INFO": SCRAP_SELL_INFO,
                   "SCRAP_LINK": SCRAP_LINK}
 
+# Settings about Data_base
+DATABASE_NAME = DATABASE_NAME
+DATABASE_PASSWORD = DATABASE_PASSWORD
+
+DATABASE_SETTINGS = {"NAME": DATABASE_NAME,
+                     "PASSWORD": DATABASE_PASSWORD,
+                     "HOST": DATABASE_HOST,
+                     "USER": DATABASE_USER}
+
+DATABASE_CREATOR = {"LISTING_TABLE": DATABASE_LISTINGS_TABLE,
+                    "LOCATION_TABLE": DATABASE_LOCATION_TABLE,
+                    "PRICES_TABLE": DATABASE_PRICES_TABLE,
+                    "BUILDING_INFO": DATABASE_BUILDING_INFO_TABLE,
+                    "APARTMENT_INFO": DATABASE_APARTMENT_INFO_TABLE,
+                    "EQUIPMENT_TABLE": DATABASE_EQUIPMENT_TABLE
+}
+
+DATABASE_INSERT = {"LISTING_INSERT": LISTINGS_INSERT,
+                   "LOCATION_INSERT": LOCATION_INSERT,
+                   "PRICES_INSERT": PRICES_INSERT,
+                   "BUILDING_INSERT": BUILDING_INFO_INSERT,
+                   "APARTMENT_INSERT": APARTMENT_INFO_INSERT,
+                   "EQUIPMENT_TABLE": EQUIPMENT_TABLE_INSERT}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "olx_scraper (+http://www.yourdomain.com)"
@@ -104,6 +128,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    "web_scraper.pipelines.WebScraperPipeline": 600,
+   "web_scraper.pipelines.SaveToMySQLPipeline": 700
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
