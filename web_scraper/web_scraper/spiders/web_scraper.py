@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
-from web_scraper.settings import SCRAP_WAIT_TIME
+from web_scraper.settings import SCRAP_WAIT_TIME, SCRAP_AMOUNT_OF_SITES
 
 class WebScraperSpider(scrapy.Spider):
     name = "web_scraper"
@@ -65,7 +65,7 @@ class WebScraperSpider(scrapy.Spider):
                     meta={'apartment_url': apartment_url}
                 )
 
-        if next_page is not None:
+        if next_page is not None and page_index < SCRAP_AMOUNT_OF_SITES:
              yield SeleniumRequest(
                   url = next_page_url,
                   callback = self.parse,

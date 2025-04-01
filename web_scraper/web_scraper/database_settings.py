@@ -132,7 +132,7 @@ def APARTMENT_INFO_INSERT(VALUES: dict):
 
 def EQUIPMENT_TABLE_INSERT(VALUES: dict):
     COMMAND = """
-    INSERT INTO Equipment (id, furtniture, air_conditioning, internet, entryphone, stove, alarm_system, oven, tv, washing_machine, cable_tv, dishwasher, fridge, phone, anti_burglary_doors_or_windows, anti_burglary_blinds)
+    INSERT INTO Equipment (id, furniture, air_conditioning, internet, entryphone, stove, alarm_system, oven, tv, washing_machine, cable_tv, dishwasher, fridge, phone, anti_burglary_doors_or_windows, anti_burglary_blinds)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
     DATA = (VALUES['listing_id'], VALUES['furniture'], VALUES['air_conditioning'], VALUES['internet'], VALUES['entryphone'], VALUES['stove'], VALUES['alarm_system'], VALUES['oven'], VALUES['tv'], VALUES['washing_machine'], VALUES['cable_tv'], VALUES['dishwasher'], VALUES['fridge'], VALUES['phone'], VALUES['anti_burglary_doors_windows'], VALUES['anti_burglary_blinds'])

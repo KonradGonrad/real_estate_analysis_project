@@ -1,3 +1,0 @@
-1. Fix parse location, because its not working corectly
-2. Add in settings option to choose which things I want to scrap - Done
-3. Fix indentificators

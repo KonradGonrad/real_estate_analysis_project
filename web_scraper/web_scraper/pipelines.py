@@ -19,6 +19,7 @@ class WebScraperPipeline:
         adapter = ItemAdapter(item)
         result = Result()
 
+
         # link
         if SCRAP_SETTINGS['SCRAP_LINK']:
             result['link'] = adapter.get('link')
@@ -63,7 +64,7 @@ class WebScraperPipeline:
         if SCRAP_SETTINGS['SCRAP_SELL_INFO']:
             result['type_of_advertiser'] = self.parse_type_of_advertiser(adapter.get('type_of_advertiser'))
             result['market_type'] = self.parse_market_type(adapter.get('market_type'))
-
+        
         return result
 
     @staticmethod
@@ -255,7 +256,8 @@ class SaveToMySQLPipeline:
             self.cur.execute(table)
 
     def process_item(self, item, spider):
-        adapter = ItemAdapter(item)
+        adapter = dict(item)
+
 
         COMMAND, DATA = DATABASE_INSERT['LISTING_INSERT'](adapter)
         self.cur.execute(COMMAND, DATA)
@@ -264,11 +266,14 @@ class SaveToMySQLPipeline:
         adapter['listing_id'] = listing_id
 
         for key, function in DATABASE_INSERT.items():
-            if not DATABASE_INSERT['LISTING_INSERT']:
-                COMMAND, DATA = function(adapter)
-                self.cur.execute(COMMAND, DATA)
+            if key == "LISTING_INSERT":
+                continue
+            COMMAND, DATA = function(adapter)
+            self.cur.execute(COMMAND, DATA)
 
             self.conn.commit()
+
+        return item
 
     def close_spider(self, spider):
         self.cur.close()

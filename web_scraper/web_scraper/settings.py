@@ -35,6 +35,7 @@ FEEDS = {
 
 # Settings about scraping
 SCRAP_WAIT_TIME = 1
+SCRAP_AMOUNT_OF_SITES = 3
 
 SCRAP_PRICE = True
 SCRAP_BUILDING_INFO = True
