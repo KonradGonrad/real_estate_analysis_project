@@ -1,5 +1,5 @@
 from shutil import which
-from web_scraper.api_keys import MYSCRAPEOPS_API_KEY 
+from web_scraper.web_scraper.my_data import MYSCRAPEOPS_API_KEY 
 from .database_settings import *
 # from olx_scraper.api_keys_example import MYSCRAPEOPS_API_KEY 
 
@@ -36,6 +36,7 @@ FEEDS = {
 # Settings about scraping
 SCRAP_WAIT_TIME = 1
 SCRAP_AMOUNT_OF_SITES = 1000
+SCRAP_CONVERT_TO_DECIMAL = True
 
 SCRAP_PRICE = True
 SCRAP_BUILDING_INFO = True

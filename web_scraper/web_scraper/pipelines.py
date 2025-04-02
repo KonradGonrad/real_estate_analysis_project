@@ -9,7 +9,7 @@ import re
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 from .items import Result
-from .settings import SCRAP_SETTINGS
+from .settings import SCRAP_SETTINGS, SCRAP_CONVERT_TO_DECIMAL
 from .settings import DATABASE_SETTINGS, DATABASE_CREATOR, DATABASE_INSERT
 
 
@@ -34,17 +34,23 @@ class WebScraperPipeline:
         if SCRAP_SETTINGS['SCRAP_BUILDING_INFO']:
             result['meters'] = self.replace_value(adapter.get('meters'))
             result['rooms'] = self.replace_value(str(adapter.get('rooms')))
-            result['heating'] = self.parse_heating(heating=adapter.get('heating'))
+            result['heating'] = self.parse_heating(heating=adapter.get('heating')) if SCRAP_CONVERT_TO_DECIMAL else adapter.get('heating')
 
-            floor, floor_max = self.parse_floor(floor=adapter.get('floor'))
+            floor, floor_max = self.parse_floor(floor=adapter.get('floor')) 
             result['floor'], result['max_floor'] = floor, floor_max
 
-            result['finish_level'] = self.parse_finish_level(adapter.get("finish_level"))
+            result['finish_level'] = self.parse_finish_level(adapter.get("finish_level")) if SCRAP_CONVERT_TO_DECIMAL else adapter.get('finish_level')
             result.update(self.parse_building_and_materials(year_of_building=adapter.get('year_of_building'),
                                                             elevator=adapter.get('elevator'),
                                                             type_of_building=adapter.get('type_of_building'),
                                                             windows_material=adapter.get('windows_material'),
                                                             safety=adapter.get('safety')))
+            # else:
+            #     result['year_of_building'] = adapter.get('year_of_building')
+            #     result['elevator'] = adapter.get('elevator')
+            #     result['type_of_building'] = adapter.get('type_of_building')
+            #     result['windows_material'] = adapter.get('windows_material')
+            #     result['safety'] = adapter.get('safety')
 
         # location
         if SCRAP_SETTINGS['SCRAP_LOCATION']:
